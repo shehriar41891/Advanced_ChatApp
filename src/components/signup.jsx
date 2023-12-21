@@ -19,10 +19,26 @@ const Signup = () => {
     setUserInfo((prevUserInfo) => ({ ...prevUserInfo, [name]: newValue }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    //making fetch request to the backend
+    try{
+      const response = await fetch('http://localhost:3000/submitform',{
+        method : 'POST',
+        headers:{
+          'Content-Type' : 'application/json',
+        },
+        body: JSON.stringify(userInfo)
+      })
 
-    console.log('The user information is ', userInfo);
+      if(!response.ok){
+        console.log('Something is wrong while sending the data to backend')
+      }
+
+      console.log('The response from the backend is ',response)
+    }catch(err){
+       console.log('There is an error in sending the data to backend',err) 
+    }
 
     setUserInfo({
       firstname: '',
