@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import {useNavigate} from 'react-router-dom'
 
 const Signup = () => {
+  const history = useNavigate()
   const [userInfo, setUserInfo] = useState({
     firstname: '',
     lastname: '',
@@ -22,20 +24,30 @@ const Signup = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     //making fetch request to the backend
+    console.log('We are sending the data to backend')
     try{
-      const response = await fetch('http://localhost:3000/submitform',{
+      const response =  await fetch('http://localhost:3000/submitform',{
         method : 'POST',
         headers:{
           'Content-Type' : 'application/json',
         },
         body: JSON.stringify(userInfo)
       })
+      
+      console.log('Something is not okay here ')
 
       if(!response.ok){
-        console.log('Something is wrong while sending the data to backend')
+        if(response.status === 0){
+          console.log('There is a Network error')
+        }
+        else{
+          console.log('The Response is : ',response.status,response.statusText)
+        }
       }
 
       console.log('The response from the backend is ',response)
+
+      history.push('/contactlist')
     }catch(err){
        console.log('There is an error in sending the data to backend',err) 
     }
