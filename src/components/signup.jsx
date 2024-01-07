@@ -47,7 +47,14 @@ const Signup = () => {
 
       console.log('The response from the backend is ',response)
 
-      history.push('/contactlist')
+      const contactList = fetch('http://localhost:3000/get-contact',{
+        method : 'GET',
+        headers:{
+          'Content-type' : 'application/json'
+        }
+      })
+
+      history('/contactlist')
     }catch(err){
        console.log('There is an error in sending the data to backend',err) 
     }

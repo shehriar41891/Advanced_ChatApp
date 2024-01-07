@@ -1,24 +1,41 @@
-// ContactList.js
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ContactList = () => {
-  const contacts = [
-    { id: 1, name: 'John Doe', status: 'Online' },
-    { id: 2, name: 'Jane Smith', status: 'Away' },
-    { id: 3, name: 'Bob Johnson', status: 'Offline' },
-    // Add more contacts as needed
-  ];
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/get-contact', {
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const fetchedContacts = await response.json();
+          setContacts(fetchedContacts);
+        } else {
+          console.log('Error fetching contacts data');
+        }
+      } catch (error) {
+        console.log('There is an error getting the contact from the backend', error);
+      }
+    };
+
+    fetchContacts();
+  }, []);
 
   return (
     <div style={styles.body}>
       <div style={styles.contactList}>
-        {contacts.map(contact => (
-          <div style={styles.contact} key={contact.id}>
-            <img style={styles.contactImage} src={`https://via.placeholder.com/50`} alt={contact.name} />
+        {contacts.map((fetchedContacts) => (
+          <div style={styles.contact} key={fetchedContacts.id}>
+            <img style={styles.contactImage} src={`https://via.placeholder.com/50`} alt={fetchedContacts.name} />
             <div style={styles.contactInfo}>
-              <h2>{contact.name}</h2>
-              <p>{contact.status}</p>
+              <h2>{fetchedContacts.contact_name}</h2>
+              <p>{fetchedContacts.contact_status}</p>
             </div>
           </div>
         ))}
